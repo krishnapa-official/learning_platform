@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - EduTutor</title>
+
+    <style>
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:Arial, sans-serif;
+        }
+
+        body{
+            background:#f4f6f9;
+            display:flex;
+        }
+
+        /* Sidebar */
+
+        .sidebar{
+            width:250px;
+            height:100vh;
+            background:#1e293b;
+            color:white;
+            padding:20px;
+            position:fixed;
+        }
+
+        .sidebar h2{
+            text-align:center;
+            margin-bottom:40px;
+        }
+
+        .sidebar ul{
+            list-style:none;
+        }
+
+        .sidebar ul li{
+            padding:15px;
+            margin:10px 0;
+            background:#334155;
+            border-radius:8px;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .sidebar ul li:hover{
+            background:#3b82f6;
+        }
+
+        /* Main Content */
+
+        .main-content{
+            margin-left:250px;
+            width:100%;
+            padding:20px;
+        }
+
+        .topbar{
+            background:white;
+            padding:15px 20px;
+            border-radius:10px;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .topbar h1{
+            color:#1e293b;
+        }
+
+        /* Form */
+
+        .form-section{
+            margin-top:30px;
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .form-section h2{
+            margin-bottom:20px;
+            color:#1e293b;
+        }
+
+        .form-group{
+            margin-bottom:15px;
+        }
+
+        .form-group input{
+            width:100%;
+            padding:12px;
+            border:1px solid #ccc;
+            border-radius:8px;
+            font-size:16px;
+        }
+
+        .add-btn{
+            background:#3b82f6;
+            color:white;
+            border:none;
+            padding:12px 20px;
+            border-radius:8px;
+            cursor:pointer;
+            font-size:16px;
+        }
+
+        .add-btn:hover{
+            background:#2563eb;
+        }
+
+        /* Table */
+
+        .table-section{
+            margin-top:30px;
+            background:white;
+            padding:25px;
+            border-radius:15px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .table-section h2{
+            margin-bottom:20px;
+            color:#1e293b;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+        }
+
+        table th, table td{
+            padding:15px;
+            border-bottom:1px solid #ddd;
+            text-align:left;
+        }
+
+        table th{
+            background:#3b82f6;
+            color:white;
+        }
+
+        .delete-btn{
+            background:red;
+            color:white;
+            border:none;
+            padding:8px 15px;
+            border-radius:6px;
+            cursor:pointer;
+        }
+
+        .delete-btn:hover{
+            background:darkred;
+        }
+
+        /* Responsive */
+
+        @media(max-width:768px){
+
+            .sidebar{
+                width:200px;
+            }
+
+            .main-content{
+                margin-left:200px;
+            }
+        }
+
+        @media(max-width:600px){
+
+            body{
+                flex-direction:column;
+            }
+
+            .sidebar{
+                width:100%;
+                height:auto;
+                position:relative;
+            }
+
+            .main-content{
+                margin-left:0;
+            }
+
+            table{
+                font-size:14px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <div class="sidebar">
+
+        <h2>EduTutor Admin</h2>
+
+        <ul>
+            <li>Dashboard</li>
+            <li>Users</li>
+            <li>Courses</li>
+            <li>Settings</li>
+            <li>Logout</li>
+        </ul>
+
+    </div>
+
+    <!-- Main Content -->
+
+    <div class="main-content">
+
+        <div class="topbar">
+            <h1>User Management</h1>
+            <h3>Welcome Admin</h3>
+        </div>
+
+        <!-- Add User Form -->
+
+        <div class="form-section">
+
+            <h2>Add New User</h2>
+
+            <div class="form-group">
+                <input type="text" id="name" placeholder="Enter User Name">
+            </div>
+
+            <div class="form-group">
+                <input type="email" id="email" placeholder="Enter User Email">
+            </div>
+
+            <button class="add-btn" onclick="addUser()">
+                Add User
+            </button>
+
+        </div>
+
+        <!-- User List -->
+
+        <div class="table-section">
+
+            <h2>Users List</h2>
+
+            <table id="userTable">
+
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Action</th>
+                </tr>
+
+                
+
+            </table>
+
+        </div>
+
+    </div>
+
+    <!-- JavaScript -->
+
+    <script>
+
+        function addUser(){
+
+            let name = document.getElementById("name").value;
+            let email = document.getElementById("email").value;
+
+            if(name === "" || email === ""){
+                alert("Please fill all fields");
+                return;
+            }
+
+            let table = document.getElementById("userTable");
+
+            let row = table.insertRow();
+
+            let cell1 = row.insertCell(0);
+            let cell2 = row.insertCell(1);
+            let cell3 = row.insertCell(2);
+
+            cell1.innerHTML = name;
+            cell2.innerHTML = email;
+
+            cell3.innerHTML = `
+                <button class="delete-btn" onclick="deleteUser(this)">
+                    Delete
+                </button>
+            `;
+
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+        }
+
+        function deleteUser(button){
+
+            let row = button.parentElement.parentElement;
+            row.remove();
+        }
+
+    </script>
+
+</body>
+</html>

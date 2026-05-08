@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>EduTutor - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="navbar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='logoorg.png') }}" alt="EduTutor Logo">
+    </div>
+
+    <div class="nav-links">
+        <a href="{{ url_for('home') }}">Home</a>
+
+        <div class="dropdown">
+            <a href="#">About</a>
+            <div class="dropdown-content">
+                <a href="{{ url_for('static', filename='ourstory.html') }}">Our Story</a>
+                <a href="{{ url_for('static', filename='mission.html') }}">Our Mission</a>
+                <a href="{{ url_for('static', filename='promise.html') }}">Our Promise</a>
+                <a href="{{ url_for('static', filename='whatwedo.html') }}">What We Do</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <a href="#">Courses</a>
+            <div class="dropdown-content">
+                <a href="{{ url_for('static', filename='c.html') }}">C</a>
+                <a href="{{ url_for('static', filename='c++.html') }}">C++</a>
+                <a href="{{ url_for('static', filename='java.html') }}">JAVA</a>
+                <a href="{{ url_for('static', filename='python.html') }}">PYTHON</a>
+                <a href="{{ url_for('static', filename='datascience.html') }}">DATA SCIENCE</a>
+                <a href="{{ url_for('static', filename='SQL.html') }}">SQL</a>
+            </div>
+        </div>
+
+        <div class="dropdown">
+            <a href="#">Contact</a>
+            <div class="dropdown-content">
+                <p><b>Email:</b> edututor@gmail.com</p>
+                <p><b>Phone:</b> +91 9876543210</p>
+            </div>
+        </div>
+
+        <!-- Show Login if not logged in, else show Dashboard & Logout -->
+        {% if session.get('user') %}
+            <a href="{{ url_for('logout') }}" class="login-btn">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}" class="login-btn">Login</a>
+        {% endif %}
+    </div>
+</div>
+
+<section class="hero">
+    <div class="hero-content">
+        <h1>Build Your Future with EduTutor</h1>
+        <p>Connect with trusted experts, anytime. Get real answers, real guidance, real time</p>
+        <a href="#" class="hero-btn">Explore Courses</a>
+    </div>
+</section>
+
+<section class="features">
+    <h2 class="section-title">Our Courses</h2>
+    <div class="card-container">
+        <div class="card">
+            <h2>C</h2>
+            <p>C is a general-purpose mid-level programming language developed by Dennis M. Ritchie at Bell Laboratories in 1972. Initially used for UNIX OS development, it later became popular for a wide range of applications.</p>
+        </div>
+        <div class="card">
+            <h2>C++</h2>
+            <p>C++ is known for its fast speed and low-level memory management. Used for making operating systems, embedded systems, graphical user interfaces and High Frequency Trading (HFT) systems.</p>
+        </div>
+        <div class="card">
+            <h2>JAVA</h2>
+            <p>Java is a high-level, object-oriented programming language used to build web apps, mobile applications, and enterprise software. Platform-independent via the Java Virtual Machine (JVM).</p>
+        </div>
+        <div class="card">
+            <h2>PYTHON</h2>
+            <p>Python is one of the most popular programming languages. Simple to use, packed with features, and supported by a wide range of libraries. Used in data science, automation, AI, and web development.</p>
+        </div>
+        <div class="card">
+            <h2>DATA SCIENCE</h2>
+            <p>Data Science combines statistics, machine learning and data visualization to extract meaningful insights from raw data, helping businesses optimize operations and predict future trends.</p>
+        </div>
+        <div class="card">
+            <h2>SQL</h2>
+            <p>SQL (Structured Query Language) is the standard language for managing and retrieving data within relational database management systems (RDBMS), interacting with data stored in tables.</p>
+        </div>
+    </div>
+</section>
+
+<footer>
+<div class="footer-container">
+    <img src="{{ url_for('static', filename='logoorg.png') }}" class="footer-logo" alt="EduTutor Logo">
+    <div class="footer-section">
+        <h3>Our Site</h3>
+        <p>An effective educational website serves as a dynamic bridge between knowledge and the learner, offering a structured, accessible, and engaging environment that transcends traditional classroom settings.</p>
+    </div>
+    <div class="footer-section">
+        <h3>Contact Us</h3>
+        <p>Have questions or need assistance? Reach out at edututor@gmail.com or follow us on our social channels.</p>
+    </div>
+    <div class="footer-section">
+        <h3>Courses</h3>
+        <ul class="footer-links">
+            <li>C</li>
+            <li>C++</li>
+            <li>Java</li>
+            <li>Data Science</li>
+            <li>SQL</li>
+            <li>Python</li>
+        </ul>
+    </div>
+</div>
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - EduTutor</title>
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f4f4f4;
+        }
+
+        .form-container{
+            width:320px;
+            margin:100px auto;
+            padding:40px;
+            background:white;
+            border-radius:15px;
+            box-shadow:0 0 10px gray;
+        }
+
+        h2{
+            text-align:center;
+        }
+
+        input{
+            width:100%;
+            padding:12px;
+            margin:10px 0;
+            border:1px solid #ccc;
+            border-radius:5px;
+            box-sizing:border-box;
+        }
+
+        button{
+            width:100%;
+            padding:12px;
+            background:#2ecc71;
+            border:none;
+            color:white;
+            border-radius:5px;
+            cursor:pointer;
+        }
+
+        button:hover{
+            background:#27ae60;
+        }
+
+        .error{
+            color:red;
+            text-align:center;
+        }
+
+        a{
+            display:block;
+            text-align:center;
+            margin-top:15px;
+            text-decoration:none;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="form-container">
+
+    <h2>Login</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form action="/login" method="POST">
+
+        <input 
+            type="text" 
+            name="username" 
+            placeholder="Enter Username"
+            required
+        >
+
+        <input 
+            type="password" 
+            name="password" 
+            placeholder="Enter Password"
+            required
+        >
+
+        <button type="submit">
+            Login
+        </button>
+
+    </form>
+
+    <a href="/register">
+        Don't have an account? Register
+    </a>
+
+</div>
+
+</body>
+</html>

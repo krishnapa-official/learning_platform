@@ -1,0 +1,383 @@
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f9fbfd;
+}
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #1f3c5c;
+    padding: 12px 30px;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+.logo img {
+    width: 140px;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+.nav-links a:hover {
+    color: #f39c12;
+}
+.dropdown {
+    position: relative;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 180px;
+    top: 120%;
+    left: 0;
+    box-shadow: 0px 6px 12px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.dropdown-content a,
+.dropdown-content p {
+    padding: 12px;
+    display: block;
+    color: #333;
+}
+
+.dropdown-content a:hover {
+    background-color: #f5f5f5;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.login-btn {
+    background-color: #f39c12;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.login-btn:hover {
+    background-color: #e67e22;
+}
+.hero {
+    height: 85vh;
+    background: linear-gradient(rgba(31,60,92,0.7), rgba(31,60,92,0.7)),
+                url('https://images.unsplash.com/photo-1581092918056-0c4c3acd3789');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+}
+
+.hero-content {
+    max-width: 600px;
+}
+
+.hero h1 {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.hero p {
+    font-size: 18px;
+}
+
+.hero-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 12px 25px;
+    background-color: #f39c12;
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.hero-btn:hover {
+    background-color: #e67e22;
+}
+
+.features {
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.section-title {
+    font-size: 30px;
+    margin-bottom: 40px;
+    color: #2c3e50;
+}
+.card-container {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.card {
+    width: 280px;
+    padding: 25px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+.card h2 {
+    color: #2d5b89;
+}
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1f3c5c;
+    color: white;
+    margin-top: 40px;
+}
+.ourstory-page
+ { 
+    background-image: url("ourstory");
+     background-size: cover;
+      background-position: center; 
+      background-repeat: no-repeat
+}
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); 
+    gap: 30px;
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+}
+.card {
+    padding: 25px;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0px 6px 15px rgba(0,0,0,0.1);
+    transition: 0.3s;
+    text-align: center;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+.course-page {
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.course-page h1 {
+    font-size: 40px;
+    color: #09437d;
+    margin-bottom: 20px;
+}
+
+.course-page p {
+    font-size: 18px;
+    max-width: 700px;
+    margin: auto;
+    line-height: 1.6;
+}
+.course-page {
+    padding: 100px 20px;
+    text-align: center;
+    background: linear-gradient(rgba(234, 228, 228, 0.5), rgba(251, 249, 249, 0.5)),
+                url(".jpg");
+    background-size: cover;
+    color: rgb(4, 3, 3);
+}
+.footer-container {
+    display: flex;
+    justify-content: center;  
+    gap: 100px; 
+    padding: 20px;
+    background-color: #1a3a5a; 
+}
+
+.footer-section {
+    color: white;
+    line-height: 1.2;
+    text-align: left;
+}
+
+
+.footer-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-links li {
+    margin-bottom: 8px; 
+}
+
+.footer-links a {
+    color: white;
+    text-decoration: none;
+}                                                                                                                                                                                                     i want to add logo in footer section at left corner (above the our site) of the footer what i do 
+.footer-container {
+    display: flex;
+    justify-content: flex-start;  /* changed */
+    gap: 100px;
+    padding: 20px;
+    background-color: #1a3a5a;
+}.footer-logo {
+    width: 100px;
+    margin-bottom: 100px;
+}
+.course-page {
+    padding: 40px;
+    background-color: #f4f4f4;
+}
+.course-container {
+    display: flex;              /* makes left & right layout */
+    justify-content: space-between;
+    align-items: flex-start;
+
+    background: #f1f1f1;
+    padding: 40px;
+    width: 90%;
+    margin: 40px auto;
+    border-radius: 12px;
+}
+
+.course-text {
+    flex: 2;
+}
+
+.course-box {
+    flex: 1;
+    margin-left: 40px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+}
+.enroll-btn {
+    margin-top: 15px;
+    padding: 10px 20px;
+    background-color: #2d5b89;
+    color: rgb(208, 215, 236);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+.enroll-btn:hover {
+    background-color: #1b3f63;
+}
+ body {
+            font-family: Arial;
+            background-color: #f4f4f4;
+        }
+
+        .form-container {
+            width: 350px;
+            margin: 80px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2ecc71;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .google-btn {
+            background-color: #db4437;
+            margin-top: 10px;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 15px 0;
+            color: gray;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+
+        .error {
+            color: red;
+            text-align: center;
+        }
+         body {
+            font-family: Arial;
+            background-color: #83bfc7;
+        }
+
+        .form-container {
+            width: 350px;
+            margin: 50px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px gray;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #2ecc71;
+            border: none;
+            color: white;
+            border-radius: 5px;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+   

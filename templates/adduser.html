@@ -2,106 +2,356 @@
 <html>
 <head>
     <title>Add User - EduTutor</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --green: #22c55e;
+            --green-dark: #16a34a;
+            --green-light: #dcfce7;
+            --slate: #1e293b;
+            --slate-mid: #475569;
+            --slate-light: #94a3b8;
+            --border: #e2e8f0;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --red-bg: #fee2e2;
+            --red-text: #991b1b;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background: #f1f5f9;
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            align-items: flex-start;
+            padding: 40px 16px;
         }
-        .card {
-            background: white;
-            padding: 40px;
-            border-radius: 12px;
-            width: 400px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-        }
-        h2 { color: #1e293b; margin-bottom: 24px; font-size: 22px; }
 
-        label {
-            display: block;
-            font-size: 13px;
-            color: #64748b;
-            font-weight: bold;
-            margin-bottom: 6px;
-        }
-        input {
+        .card {
+            background: var(--white);
+            border-radius: 16px;
             width: 100%;
-            padding: 11px 14px;
-            margin-bottom: 18px;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            transition: border 0.2s;
+            max-width: 480px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden;
         }
-        input:focus { border-color: #22c55e; }
+
+        .card-header {
+            background: var(--slate);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .card-header .icon {
+            width: 36px; height: 36px;
+            background: var(--green);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 18px;
+        }
+        .card-header h2 { color: #fff; font-size: 18px; font-weight: 600; }
+        .card-header p  { color: #94a3b8; font-size: 13px; margin-top: 2px; }
+
+        .card-body { padding: 28px 32px 32px; }
 
         .error {
-            background: #fee2e2;
-            color: #991b1b;
+            background: var(--red-bg);
+            color: var(--red-text);
             padding: 10px 14px;
-            border-radius: 6px;
-            margin-bottom: 16px;
-            font-size: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
-        .actions { display: flex; gap: 10px; margin-top: 8px; }
 
+        .section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--slate-light);
+            margin: 20px 0 12px;
+        }
+        .section-title:first-child { margin-top: 0; }
+
+        .field { margin-bottom: 14px; }
+        .field label {
+            display: block;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--slate-mid);
+            margin-bottom: 5px;
+        }
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 10px 13px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            color: var(--slate);
+            background: var(--white);
+            outline: none;
+            transition: border-color 0.15s, box-shadow 0.15s;
+            appearance: none;
+        }
+        .field input:focus,
+        .field select:focus {
+            border-color: var(--green);
+            box-shadow: 0 0 0 3px rgba(34,197,94,0.12);
+        }
+        .select-wrap { position: relative; }
+        .select-wrap::after {
+            content: '▾';
+            position: absolute; right: 13px; top: 50%;
+            transform: translateY(-50%);
+            color: var(--slate-light);
+            pointer-events: none;
+            font-size: 13px;
+        }
+
+        #courseDetails {
+            display: none;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 16px;
+            margin-top: 4px;
+            animation: fadeIn 0.2s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+
+        .course-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--slate);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 3px 8px;
+            border-radius: 20px;
+            background: var(--green-light);
+            color: var(--green-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .info-item { background: var(--white); border-radius: 7px; padding: 9px 11px; border: 1px solid var(--border); }
+        .info-item .info-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--slate-light); margin-bottom: 3px; }
+        .info-item .info-value { font-size: 13px; font-weight: 500; color: var(--slate); }
+
+        .fee-section { border-top: 1px solid var(--border); padding-top: 12px; }
+        .fee-section .fee-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--slate-light); margin-bottom: 10px; }
+        .fee-row {
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 13px; padding: 5px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+        .fee-row:last-of-type { border-bottom: none; }
+        .fee-row .fee-label { color: var(--slate-mid); }
+        .fee-row .fee-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--slate); }
+        .fee-row.discount .fee-val { color: var(--green-dark); }
+        .fee-total {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: 10px; padding-top: 10px;
+            border-top: 2px solid var(--slate);
+        }
+        .fee-total .total-label { font-size: 14px; font-weight: 600; color: var(--slate); }
+        .fee-total .total-val { font-family: 'DM Mono', monospace; font-size: 17px; font-weight: 600; color: #2563eb; }
+
+        .divider { height: 1px; background: var(--border); margin: 22px 0; }
+
+        .actions { display: flex; gap: 10px; margin-top: 8px; }
         .btn-add {
             flex: 1;
-            background: #22c55e;
+            background: var(--green);
             color: white;
             padding: 12px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
+            transition: background 0.15s, transform 0.1s;
         }
-        .btn-add:hover { background: #16a34a; }
-
+        .btn-add:hover { background: var(--green-dark); }
+        .btn-add:active { transform: scale(0.98); }
         .btn-cancel {
             flex: 1;
-            background: #e2e8f0;
-            color: #475569;
+            background: #f1f5f9;
+            color: var(--slate-mid);
             padding: 12px;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: bold;
+            font-weight: 600;
+            font-family: 'DM Sans', sans-serif;
             text-decoration: none;
             text-align: center;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.15s;
         }
-        .btn-cancel:hover { background: #cbd5e1; }
+        .btn-cancel:hover { background: #e2e8f0; }
     </style>
 </head>
 <body>
+
 <div class="card">
-    <h2>➕ Add New User</h2>
-
-    {% if error %}
-        <div class="error">⚠️ {{ error }}</div>
-    {% endif %}
-
-    <form action="/admin/adduser" method="POST">
-
-        <label>Username</label>
-        <input type="text" name="username" placeholder="Enter username" required>
-
-        <label>Password</label>
-        <input type="password" name="password" placeholder="Min 8 characters" required>
-
-        <div class="actions">
-            <button type="submit" class="btn-add">✅ Create User</button>
-            <a href="/admin" class="btn-cancel">✖ Cancel</a>
+    <div class="card-header">
+        <div class="icon">➕</div>
+        <div>
+            <h2>Add New User</h2>
+            <p>Create a student account and enroll in a course</p>
         </div>
+    </div>
 
-    </form>
+    <div class="card-body">
+
+        {% if error %}
+            <div class="error">⚠️ {{ error }}</div>
+        {% endif %}
+
+        <form action="/admin/adduser" method="POST">
+
+            <div class="section-title">Account Credentials</div>
+
+            <div class="field">
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Enter username" required>
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Min 8 characters" required>
+            </div>
+
+            <div class="divider"></div>
+            <div class="section-title">Course Enrollment</div>
+
+            <div class="field">
+                <label>Select Course</label>
+                <div class="select-wrap">
+                    <select name="course_id" id="courseSelect" onchange="showCourse(this.value)" required>
+                        <option value="">— Choose a course —</option>
+                        {% for course in courses %}
+                            <option value="{{ course.id }}"
+                                data-name="{{ course.name }}"
+                                data-duration="{{ course.duration }}"
+                                data-schedule="{{ course.schedule }}"
+                                data-instructor="{{ course.instructor }}"
+                                data-mode="{{ course.mode }}"
+                                data-fee="{{ course.fee }}"
+                                data-reg="{{ course.registration_fee }}"
+                                data-mat="{{ course.material_fee }}"
+                                data-discount="{{ course.discount }}">
+                                {{ course.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <!-- Course + Fee Details Panel -->
+            <div id="courseDetails">
+                <div class="course-name">
+                    <span id="dName"></span>
+                    <span class="badge">Enrolled</span>
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Duration</div>
+                        <div class="info-value" id="dDuration">—</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Mode</div>
+                        <div class="info-value" id="dMode">—</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Schedule</div>
+                        <div class="info-value" id="dSchedule">—</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Instructor</div>
+                        <div class="info-value" id="dInstructor">—</div>
+                    </div>
+                </div>
+
+                <div class="fee-section">
+                    <div class="fee-title">Fee Breakdown</div>
+                    <div class="fee-row"><span class="fee-label">Course Fee</span><span class="fee-val" id="dFee">—</span></div>
+                    <div class="fee-row"><span class="fee-label">Registration Fee</span><span class="fee-val" id="dReg">—</span></div>
+                    <div class="fee-row"><span class="fee-label">Material Fee</span><span class="fee-val" id="dMat">—</span></div>
+                    <div class="fee-row discount"><span class="fee-label">Discount</span><span class="fee-val" id="dDiscount">—</span></div>
+                    <div class="fee-total">
+                        <span class="total-label">Total Payable</span>
+                        <span class="total-val" id="dTotal">—</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="actions">
+                <button type="submit" class="btn-add">✅ Create User</button>
+                <a href="/admin" class="btn-cancel">✖ Cancel</a>
+            </div>
+
+        </form>
+    </div>
 </div>
+
+<script>
+function fmt(n) {
+    return '₹' + Number(n).toLocaleString('en-IN');
+}
+
+function showCourse(val) {
+    const panel = document.getElementById('courseDetails');
+    if (!val) { panel.style.display = 'none'; return; }
+
+    const opt = document.querySelector('#courseSelect option[value="' + val + '"]');
+    const fee      = Number(opt.dataset.fee);
+    const reg      = Number(opt.dataset.reg);
+    const mat      = Number(opt.dataset.mat);
+    const discount = Number(opt.dataset.discount);
+    const total    = fee + reg + mat - discount;
+
+    document.getElementById('dName').textContent       = opt.dataset.name;
+    document.getElementById('dDuration').textContent   = opt.dataset.duration;
+    document.getElementById('dMode').textContent       = opt.dataset.mode;
+    document.getElementById('dSchedule').textContent   = opt.dataset.schedule;
+    document.getElementById('dInstructor').textContent = opt.dataset.instructor;
+    document.getElementById('dFee').textContent        = fmt(fee);
+    document.getElementById('dReg').textContent        = fmt(reg);
+    document.getElementById('dMat').textContent        = fmt(mat);
+    document.getElementById('dDiscount').textContent   = '− ' + fmt(discount);
+    document.getElementById('dTotal').textContent      = fmt(total);
+
+    panel.style.display = 'block';
+}
+</script>
+
 </body>
 </html>

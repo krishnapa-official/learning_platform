@@ -246,6 +246,26 @@ def admin_dashboard():
     if not session.get('is_admin'):
         return redirect('/admin/login')
     return redirect('/admin')
+    # ── Admin Edit Course ─────────────────────────────────────
+@app.route('/admin/courses/edit/<int:course_id>', methods=['GET', 'POST'])
+def admin_edit_course(course_id):
+    if not session.get('is_admin'):
+        return redirect('/admin/login')
+    course = Course.query.get_or_404(course_id)
+    if request.method == 'POST':
+        course.name             = request.form['name'].strip()
+        course.duration         = request.form['duration'].strip()
+        course.schedule         = request.form['schedule'].strip()
+        course.instructor       = request.form['instructor'].strip()
+        course.mode             = request.form['mode']
+        course.fee              = int(request.form.get('fee', 0) or 0)
+        course.registration_fee = int(request.form.get('registration_fee', 0) or 0)
+        course.material_fee     = int(request.form.get('material_fee', 0) or 0)
+        course.discount         = int(request.form.get('discount', 0) or 0)
+        db.session.commit()
+        flash(f"Course '{course.name}' updated successfully.", "success")
+        return redirect('/admin/courses')
+    return render_template('admin_edit_course.html', course=course)
 
 # ── ALWAYS LAST ───────────────────────────────────────────
 if __name__ == '__main__':

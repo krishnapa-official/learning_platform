@@ -29,6 +29,8 @@
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: bold; }
         .online  { background: #dcfce7; color: #16a34a; }
         .offline { background: #dbeafe; color: #1d4ed8; }
+        .btn-edit { background: #3b82f6; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; }
+        .btn-edit:hover { background: #2563eb; }
     </style>
 </head>
 <body>
@@ -59,6 +61,7 @@
                     <th>Mode</th>
                     <th>Fee (₹)</th>
                     <th>Schedule</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -71,6 +74,9 @@
                     <td><span class="badge {{ course.mode | lower }}">{{ course.mode }}</span></td>
                     <td>₹{{ course.fee | int }}</td>
                     <td>{{ course.schedule }}</td>
+                    <td>
+                        <a href="/admin/courses/edit/{{ course.id }}" class="btn-edit">Edit</a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

@@ -380,4 +380,5 @@ body {
             text-align: center;
             margin-top: 10px;
         }
-   
+   .btn-edit { background: #3b82f6; color: white; padding: 6px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; }
+.btn-edit:hover { background: #2563eb; }

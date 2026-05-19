@@ -3,6 +3,73 @@
 <head>
     <title>EduTutor - Home</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .card {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card p {
+            flex-grow: 1;
+        }
+        .enroll-btn {
+            display: block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background-color: #f97316;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            transition: background 0.2s;
+            box-sizing: border-box;
+        }
+        .enroll-btn:hover {
+            background-color: #ea6c05;
+        }
+        .enrolled-badge {
+            display: block;
+            margin-top: 16px;
+            padding: 10px 24px;
+            background-color: #16a34a;
+            color: white;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .enrolled-badge:hover {
+            background-color: #15803d;
+        }
+        .login-notice {
+            text-align: center;
+            background: #fff7ed;
+            border: 1px solid #fed7aa;
+            color: #9a3412;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 0 auto 20px auto;
+            font-size: 14px;
+            max-width: 500px;
+        }
+        .login-notice a {
+            color: #f97316;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .login-notice a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
 
@@ -18,31 +85,92 @@
 
 <section class="features">
     <h2 class="section-title">Our Courses</h2>
+
     <div class="card-container">
+
+        <!-- C -->
         <div class="card">
             <h2>C</h2>
             <p>C is a general-purpose mid-level programming language developed by Dennis M. Ritchie at Bell Laboratories in 1972. Initially used for UNIX OS development, it later became popular for a wide range of applications.</p>
+            {% if not current_user %}
+                <a href="{{ url_for('login') }}" class="enroll-btn">Enroll Now</a>
+            {% elif 'C' in enrolled_course_names %}
+                <a href="{{ url_for('course_c') }}" class="enrolled-badge">✔ Enrolled</a>
+            {% else %}
+                <a href="{{ url_for('payment', course='C') }}" class="enroll-btn">Enroll Now</a>
+            {% endif %}
         </div>
+
+        <!-- C++ -->
         <div class="card">
             <h2>C++</h2>
-            <p>C++ is known for its fast speed and low-level memory management. Used for making operating systems, embedded systems, graphical user interfaces and High Frequency Trading (HFT) systems.</p>
+            <p>C++ is a powerful general-purpose programming language created by Bjarne Stroustrup as an extension of C. It supports object-oriented, procedural and generic programming, making it ideal for system and application software.</p>
+           <!-- NEW — enrolled goes to course page, enroll goes to payment -->
+{% if not current_user %}
+    <a href="{{ url_for('login') }}" class="enroll-btn">Enroll Now</a>
+{% elif 'C++' in enrolled_course_names %}
+    <a href="{{ url_for('course_c++') }}" class="enrolled-badge">✔ Enrolled</a>
+{% else %}
+    <a href="{{ url_for('payment', course='C++') }}" class="enroll-btn">Enroll Now</a>
+{% endif %}
         </div>
+
+        <!-- Java -->
         <div class="card">
-            <h2>JAVA</h2>
-            <p>Java is a high-level, object-oriented programming language used to build web apps, mobile applications, and enterprise software. Platform-independent via the Java Virtual Machine (JVM).</p>
+            <h2>Java</h2>
+            <p>Java is a high-level, object-oriented programming language designed for portability and performance. Write once, run anywhere — Java powers Android apps, enterprise backends, and large-scale cloud systems.</p>
+            <!-- NEW — enrolled goes to course page, enroll goes to payment -->
+{% if not current_user %}
+    <a href="{{ url_for('login') }}" class="enroll-btn">Enroll Now</a>
+{% elif 'Java' in enrolled_course_names %}
+    <a href="{{ url_for('course_java') }}" class="enrolled-badge">✔ Enrolled</a>
+{% else %}
+    <a href="{{ url_for('payment', course='java') }}" class="enroll-btn">Enroll Now</a>
+{% endif %}
         </div>
+
+        <!-- Python -->
         <div class="card">
-            <h2>PYTHON</h2>
-            <p>Python is one of the most popular programming languages. Simple to use, packed with features, and supported by a wide range of libraries. Used in data science, automation, AI, and web development.</p>
+            <h2>Python</h2>
+            <p>Python is a versatile, beginner-friendly programming language known for its simplicity and readability. It is widely used in web development, data science, artificial intelligence, automation and scientific computing.</p>
+            <!-- NEW — enrolled goes to course page, enroll goes to payment -->
+{% if not current_user %}
+    <a href="{{ url_for('login') }}" class="enroll-btn">Enroll Now</a>
+{% elif 'Python' in enrolled_course_names %}
+    <a href="{{ url_for('course_python') }}" class="enrolled-badge">✔ Enrolled</a>
+{% else %}
+    <a href="{{ url_for('payment', course='python') }}" class="enroll-btn">Enroll Now</a>
+{% endif %}
         </div>
+
+        <!-- Data Science -->
         <div class="card">
-            <h2>DATA SCIENCE</h2>
-            <p>Data Science combines statistics, machine learning and data visualization to extract meaningful insights from raw data, helping businesses optimize operations and predict future trends.</p>
+            <h2>Data Science</h2>
+            <p>Data Science combines statistics, machine learning and data visualization to extract insights from data. It is one of the fastest-growing fields, powering decisions in healthcare, finance, tech and beyond.</p>
+            <!-- NEW — enrolled goes to course page, enroll goes to payment -->
+{% if not current_user %}
+                <a href="{{ url_for('login') }}" class="enroll-btn">Enroll Now</a>
+            {% elif 'data science' in enrolled_course_names %}
+                <a href="{{ url_for('course_data science') }}" class="enrolled-badge">✔ Enrolled</a>
+            {% else %}
+                <a href="{{ url_for('payment', course='data science') }}" class="enroll-btn">Enroll Now</a>
+            {% endif %}
         </div>
+
+        <!-- SQL -->
         <div class="card">
             <h2>SQL</h2>
-            <p>SQL (Structured Query Language) is the standard language for managing and retrieving data within relational database management systems (RDBMS), interacting with data stored in tables.</p>
+            <p>SQL (Structured Query Language) is the standard language for managing relational databases. Essential for developers, analysts and data scientists — SQL lets you store, query and manipulate data with precision.</p>
+            <!-- NEW — enrolled goes to course page, enroll goes to payment -->
+{% if not current_user %}
+    <a href="{{ url_for('login') }}" class="enroll-btn">Enroll Now</a>
+{% elif 'SQL' in enrolled_course_names %}
+    <a href="{{ url_for('course_SQL') }}" class="enrolled-badge">✔ Enrolled</a>
+{% else %}
+    <a href="{{ url_for('payment', course='SQL') }}" class="enroll-btn">Enroll Now</a>
+{% endif %}
         </div>
+
     </div>
 </section>
 
@@ -51,11 +179,11 @@
         <img src="{{ url_for('static', filename='logoorg.png') }}" class="footer-logo" alt="EduTutor Logo">
         <div class="footer-section">
             <h3>Our Site</h3>
-            <p>An effective educational website serves as a dynamic bridge between knowledge and the learner, offering a structured, accessible, and engaging environment that transcends traditional classroom settings.</p>
+            <p>An effective educational website serves as a dynamic bridge between knowledge and the learner, offering a structured, accessible, and engaging environment.</p>
         </div>
         <div class="footer-section">
             <h3>Contact Us</h3>
-            <p>Have questions or need assistance? Reach out at edututor@gmail.com or follow us on our social channels.</p>
+            <p>Have questions? Reach out at edututor@gmail.com or follow us on our social channels.</p>
         </div>
         <div class="footer-section">
             <h3>Courses</h3>
@@ -63,9 +191,9 @@
                 <li>C</li>
                 <li>C++</li>
                 <li>Java</li>
+                <li>Python</li>
                 <li>Data Science</li>
                 <li>SQL</li>
-                <li>Python</li>
             </ul>
         </div>
     </div>

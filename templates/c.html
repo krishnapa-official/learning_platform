@@ -1,30 +1,546 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>C Course - EduTutor</title>
+    <title>C Programming - EduTutor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        /* ── C Page Extra Styles ── */
+
+        .c-hero-banner {
+            background: linear-gradient(135deg, #1f3c5c 0%, #2d5b89 60%, #1b3f63 100%);
+            padding: 70px 40px 60px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .c-hero-banner::before {
+            content: 'C';
+            position: absolute;
+            right: 5%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 280px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.05);
+            line-height: 1;
+            pointer-events: none;
+        }
+
+        .c-hero-banner .badge {
+            display: inline-block;
+            background: rgba(243,156,18,0.2);
+            border: 1px solid #f39c12;
+            color: #f39c12;
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+
+        .c-hero-banner h1 {
+            font-size: 52px;
+            font-weight: 900;
+            margin: 0 0 16px;
+            line-height: 1.1;
+        }
+
+        .c-hero-banner h1 span { color: #f39c12; }
+
+        .c-hero-banner p {
+            font-size: 17px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: #c8d8e8;
+            line-height: 1.7;
+        }
+
+        .hero-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+
+        .hero-stat .num {
+            font-size: 32px;
+            font-weight: 900;
+            color: #f39c12;
+            display: block;
+        }
+
+        .hero-stat .lbl {
+            font-size: 12px;
+            color: #a8c4dc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        .course-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: white;
+            padding: 40px;
+            width: 90%;
+            margin: 40px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            gap: 30px;
+        }
+
+        .course-text h2 {
+            font-size: 26px;
+            color: #1f3c5c;
+            margin-bottom: 16px;
+            border-left: 4px solid #f39c12;
+            padding-left: 14px;
+        }
+
+        .course-text p {
+            font-size: 16px;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+
+        .course-box {
+            flex: 0 0 290px;
+            background: #1f3c5c;
+            color: white;
+            padding: 28px 22px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(31,60,92,0.3);
+        }
+
+        .course-box h3 {
+            font-size: 18px;
+            color: #f39c12;
+            margin-bottom: 18px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 12px;
+        }
+
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 14px;
+        }
+
+        .detail-item:last-of-type { border-bottom: none; }
+        .detail-item .d-label { color: #a8c4dc; }
+        .detail-item .d-value { font-weight: 600; color: white; }
+
+        .price-section {
+            text-align: center;
+            margin: 18px 0 14px;
+            background: rgba(243,156,18,0.12);
+            border-radius: 8px;
+            padding: 14px;
+        }
+
+        .price-section .price {
+            font-size: 34px;
+            font-weight: 900;
+            color: #f39c12;
+        }
+
+        .price-section .price-note {
+            font-size: 11px;
+            color: #a8c4dc;
+            margin-top: 4px;
+        }
+
+        .enroll-btn {
+            width: 100%;
+            margin-top: 4px;
+            padding: 12px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-align: center;
+            display: block;
+            text-decoration: none;
+            box-sizing: border-box;
+        }
+
+        .enroll-btn:hover { background-color: #e67e22; }
+
+        /* ── ENROLLED BADGE ── */
+        .enrolled-badge {
+            width: 100%;
+            margin-top: 4px;
+            padding: 12px;
+            background-color: #16a34a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            display: block;
+            box-sizing: border-box;
+            cursor: default;
+        }
+
+        /* ── LOGIN NOTICE ── */
+        .login-notice-box {
+            background: rgba(249,115,22,0.1);
+            border: 1px solid #f97316;
+            color: #fff;
+            border-radius: 8px;
+            padding: 12px;
+            text-align: center;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .login-notice-box a {
+            color: #f39c12;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .login-notice-box a:hover { text-decoration: underline; }
+
+        .card-note {
+            text-align: center;
+            font-size: 12px;
+            color: #a8c4dc;
+            margin-top: 10px;
+        }
+
+        .learn-section {
+            background: #f4f8fc;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .learn-section .section-title { color: #1f3c5c; margin-bottom: 8px; }
+        .learn-section .section-sub { color: #666; margin-bottom: 32px; font-size: 15px; }
+
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .learn-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+            border-top: 3px solid #2d5b89;
+            transition: 0.3s;
+        }
+
+        .learn-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+            border-top-color: #f39c12;
+        }
+
+        .learn-card .lc-icon { font-size: 28px; margin-bottom: 12px; }
+
+        .learn-card h4 {
+            color: #1f3c5c;
+            font-size: 16px;
+            margin: 0 0 8px;
+        }
+
+        .learn-card p {
+            color: #666;
+            font-size: 13px;
+            line-height: 1.6;
+            margin: 0;
+        }
+
+        .syllabus-section {
+            padding: 60px 20px;
+            text-align: center;
+            background: white;
+        }
+
+        .syllabus-section .section-title { color: #1f3c5c; margin-bottom: 8px; }
+        .syllabus-section .section-sub { color: #666; margin-bottom: 28px; font-size: 15px; }
+
+        .syllabus-list {
+            max-width: 750px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        .syl-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .syl-item:hover {
+            background: #f4f8fc;
+            border-radius: 8px;
+        }
+
+        .syl-num {
+            width: 34px;
+            height: 34px;
+            background: #1f3c5c;
+            color: white;
+            border-radius: 8px;
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .syl-name { flex: 1; font-size: 15px; color: #333; font-weight: 500; }
+
+        .syl-week {
+            font-size: 12px;
+            color: #f39c12;
+            font-weight: 600;
+            background: rgba(243,156,18,0.1);
+            padding: 3px 10px;
+            border-radius: 12px;
+        }
+
+        .instructor-section {
+            background: #f4f8fc;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .instructor-section .section-title { color: #1f3c5c; margin-bottom: 28px; }
+
+        .instructor-card {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            background: white;
+            border-radius: 12px;
+            padding: 32px 36px;
+            max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            text-align: left;
+        }
+
+        .inst-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1f3c5c, #2d5b89);
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-size: 32px;
+            font-weight: 900;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .inst-name { font-size: 22px; font-weight: 800; color: #1f3c5c; }
+        .inst-role { color: #f39c12; font-size: 13px; font-weight: 600; margin: 4px 0 10px; }
+        .inst-bio  { color: #555; font-size: 14px; line-height: 1.7; }
+
+        @media (max-width: 768px) {
+            .course-container { flex-direction: column; }
+            .course-box { flex: unset; width: 100%; }
+            .learn-grid { grid-template-columns: 1fr 1fr; }
+            .c-hero-banner h1 { font-size: 34px; }
+            .c-hero-banner::before { display: none; }
+            .hero-stats-row { gap: 20px; }
+            .instructor-card { flex-direction: column; text-align: center; }
+        }
+
+        @media (max-width: 500px) {
+            .learn-grid { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
 
 {% include 'navbar.html' %}
 
+<!-- ── HERO BANNER ── -->
+<div class="c-hero-banner">
+    <div class="badge">⭐ Beginner Friendly</div>
+    <h1>C <span>Programming</span></h1>
+    <p>The language that powers operating systems, compilers and embedded systems.
+       Build a rock-solid programming foundation with the mother of all languages.</p>
+    <div class="hero-stats-row">
+        <div class="hero-stat">
+            <span class="num">3</span>
+            <span class="lbl">Months</span>
+        </div>
+        <div class="hero-stat">
+            <span class="num">36</span>
+            <span class="lbl">Classes</span>
+        </div>
+        <div class="hero-stat">
+            <span class="num">12</span>
+            <span class="lbl">Modules</span>
+        </div>
+        <div class="hero-stat">
+            <span class="num">100%</span>
+            <span class="lbl">Practical</span>
+        </div>
+    </div>
+</div>
+
+<!-- ── ABOUT + DETAILS ── -->
 <section class="course-page">
     <div class="course-container">
+
         <div class="course-text">
-            <h1>C Programming</h1>
-            <p>C is a general-purpose mid-level programming language developed by Dennis M. Ritchie at Bell Laboratories in 1972. It was initially used for the development of UNIX operating system, but it later became popular for a wide range of applications.</p>
-            <p>C is considered mother of all programming languages as many later languages like Java, PHP and JavaScript have borrowed syntax/features directly or indirectly from C.</p>
-            <p>Learning C programming first helps to learn any modern programming language as it provides a deeper understanding of the fundamentals of programming and operating systems with features like pointers.</p>
-            <p>C is widely used in operating systems, embedded systems, compilers, databases, networking, game engines and real-time systems for its efficiency in low-resource environments.</p>
+            <h2>About This Course</h2>
+            <p>C is a general-purpose mid-level programming language developed by Dennis M. Ritchie at Bell Laboratories in 1972. It was initially used for the development of the UNIX operating system, and later became popular for a wide range of applications.</p>
+            <p>C is considered the mother of all programming languages — Java, PHP, Python and JavaScript all borrowed syntax and features directly or indirectly from C. Learning C first gives you a deeper understanding of how computers actually work.</p>
+            <p>C is widely used in operating systems, embedded systems, compilers, databases, networking, game engines and real-time systems. Its efficiency in low-resource environments makes it irreplaceable even today.</p>
+            <p>By the end of this course you'll be able to write clean, efficient C programs, understand memory management, and have the foundation to learn any other language quickly.</p>
         </div>
+
+        <!-- ── COURSE BOX WITH ENROLL LOGIC ── -->
         <div class="course-box">
-            <h3>Course Details</h3>
-            <p><strong>Duration:</strong> 3 Months</p>
-            <p><strong>Fees:</strong> ₹8,800</p>
-            <p><strong>Instructor:</strong> Mr. Rajan</p>
-            <p><strong>Mode:</strong> Offline</p>
-            <p><strong>Schedule:</strong> Mon/Wed/Fri</p>
-            <button class="enroll-btn">Enroll Now</button>
+            <h3>📋 Course Details</h3>
+            <div class="detail-item">
+                <span class="d-label">⏱ Duration</span>
+                <span class="d-value">3 Months</span>
+            </div>
+            <div class="detail-item">
+                <span class="d-label">📅 Schedule</span>
+                <span class="d-value">Mon / Wed / Fri</span>
+            </div>
+            <div class="detail-item">
+                <span class="d-label">👨‍🏫 Instructor</span>
+                <span class="d-value">Mr. Rajan</span>
+            </div>
+            <div class="detail-item">
+                <span class="d-label">🖥️ Mode</span>
+                <span class="d-value">Offline</span>
+            </div>
+            <div class="detail-item">
+                <span class="d-label">🎯 Level</span>
+                <span class="d-value">Beginner → Advanced</span>
+            </div>
+
+            <div class="price-section">
+                <div class="price">₹8,800</div>
+                <div class="price-note">Reg. ₹500 + Material ₹300 included</div>
+            </div>
+
+            <!-- ── ENROLL BUTTON LOGIC ── -->
+            {% if not current_user %}
+                <a href="{{ url_for('login') }}" class="enroll-btn">Login to Enroll →</a>
+                <div class="login-notice-box">
+                    Please <a href="{{ url_for('login') }}">login</a> or
+                    <a href="{{ url_for('register') }}">register</a> to enroll.
+                </div>
+            {% elif 'C' in enrolled_course_names %}
+                <span class="enrolled-badge">✔ You are Enrolled</span>
+                <p class="card-note">✅ Seat confirmed within 24 hours</p>
+            {% else %}
+                <a href="{{ url_for('enroll_course', course_name='C') }}" class="enroll-btn">Enroll Now →</a>
+                <p class="card-note">✅ Seat confirmed within 24 hours</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+</section>
+
+<!-- ── WHAT YOU'LL LEARN ── -->
+<section class="learn-section">
+    <div class="section-title">What You'll Learn</div>
+    <p class="section-sub">Hands-on topics covered throughout the course</p>
+    <div class="learn-grid">
+        <div class="learn-card">
+            <div class="lc-icon">🧱</div>
+            <h4>C Fundamentals</h4>
+            <p>Variables, data types, operators, control flow and functions — the basics done right from day one.</p>
+        </div>
+        <div class="learn-card">
+            <div class="lc-icon">🔗</div>
+            <h4>Pointers & Memory</h4>
+            <p>Understand how memory works, use pointers confidently, and manage dynamic allocation with malloc/free.</p>
+        </div>
+        <div class="learn-card">
+            <div class="lc-icon">📦</div>
+            <h4>Arrays & Strings</h4>
+            <p>Work with arrays, multi-dimensional data, and C-style string manipulation functions.</p>
+        </div>
+        <div class="learn-card">
+            <div class="lc-icon">🏗️</div>
+            <h4>Structures & Unions</h4>
+            <p>Model real-world data using structs, nested structures, and bit-field unions.</p>
+        </div>
+        <div class="learn-card">
+            <div class="lc-icon">📁</div>
+            <h4>File I/O</h4>
+            <p>Read and write files, handle streams, and build programs that store and retrieve data.</p>
+        </div>
+        <div class="learn-card">
+            <div class="lc-icon">⚙️</div>
+            <h4>Real Projects</h4>
+            <p>Build a student record system, a calculator, and a mini file manager entirely in C.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ── SYLLABUS ── -->
+<section class="syllabus-section">
+    <div class="section-title">Course Syllabus</div>
+    <p class="section-sub">12 weeks · 3 classes per week · Mon / Wed / Fri</p>
+    <div class="syllabus-list">
+        <div class="syl-item"><div class="syl-num">01</div><div class="syl-name">Introduction to C, History & Setup</div><div class="syl-week">Week 1</div></div>
+        <div class="syl-item"><div class="syl-num">02</div><div class="syl-name">Variables, Data Types & Operators</div><div class="syl-week">Week 2</div></div>
+        <div class="syl-item"><div class="syl-num">03</div><div class="syl-name">Control Flow — if, switch, loops</div><div class="syl-week">Week 3</div></div>
+        <div class="syl-item"><div class="syl-num">04</div><div class="syl-name">Functions & Recursion</div><div class="syl-week">Week 4</div></div>
+        <div class="syl-item"><div class="syl-num">05</div><div class="syl-name">Arrays & Multi-dimensional Arrays</div><div class="syl-week">Week 5</div></div>
+        <div class="syl-item"><div class="syl-num">06</div><div class="syl-name">Strings & String Functions</div><div class="syl-week">Week 6</div></div>
+        <div class="syl-item"><div class="syl-num">07</div><div class="syl-name">Pointers & Pointer Arithmetic</div><div class="syl-week">Week 7</div></div>
+        <div class="syl-item"><div class="syl-num">08</div><div class="syl-name">Dynamic Memory — malloc, calloc, free</div><div class="syl-week">Week 8</div></div>
+        <div class="syl-item"><div class="syl-num">09</div><div class="syl-name">Structures, Unions & Enums</div><div class="syl-week">Week 9</div></div>
+        <div class="syl-item"><div class="syl-num">10</div><div class="syl-name">File Handling — Read, Write, Append</div><div class="syl-week">Week 10</div></div>
+        <div class="syl-item"><div class="syl-num">11</div><div class="syl-name">Preprocessors, Macros & Header Files</div><div class="syl-week">Week 11</div></div>
+        <div class="syl-item"><div class="syl-num">12</div><div class="syl-name">Final Projects & Certification</div><div class="syl-week">Week 12</div></div>
+    </div>
+</section>
+
+<!-- ── INSTRUCTOR ── -->
+<section class="instructor-section">
+    <div class="section-title">Meet Your Instructor</div>
+    <div class="instructor-card">
+        <div class="inst-avatar">R</div>
+        <div>
+            <div class="inst-name">Mr. Rajan</div>
+            <div class="inst-role">C & C++ Specialist · 12+ Years Experience</div>
+            <div class="inst-bio">
+                Mr. Rajan has been teaching systems programming for over a decade, with a background in
+                embedded systems and compiler development. His hands-on teaching style focuses on building
+                genuine understanding — not just syntax memorization. Students consistently rate his classes
+                as the clearest and most practical introduction to C programming available.
+            </div>
         </div>
     </div>
 </section>

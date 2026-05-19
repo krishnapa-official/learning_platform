@@ -35,10 +35,17 @@
             </div>
         </div>
 
-        {% if session.get('user') %}
-            <a href="{{ url_for('logout') }}" class="login-btn">Logout</a>
+        {% if current_user %}
+            <div class="dropdown">
+                <a href="#" class="login-btn">👤 {{ current_user.username }} ▾</a>
+                <div class="dropdown-content">
+                    <a href="{{ url_for('profile') }}">My Profile</a>
+                    <a href="{{ url_for('logout') }}">Logout</a>
+                </div>
+            </div>
         {% else %}
             <a href="{{ url_for('login') }}" class="login-btn">Login</a>
         {% endif %}
+
     </div>
 </div>

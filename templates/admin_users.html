@@ -67,23 +67,51 @@
             <a href="/admin/adduser" class="btn-add-user">➕ Add User</a>
         </div>
         <table>
-            <thead><tr><th>ID</th><th>Username</th><th>Action</th></tr></thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>
-                        <a href="/admin/edit/{{ user.id }}" class="btn-edit">✏️ Edit</a>
-                        <form action="/admin/delete/{{ user.id }}" method="POST" style="display:inline;"
-                              onsubmit="return confirm('Delete {{ user.username }}?')">
-                            <button type="submit" class="btn-delete">🗑️ Delete</button>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Enrolled Courses</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>
+                {% if user.courses %}
+                    {% for course in user.courses %}
+                        <span style="background:#dbeafe; color:#1e40af; font-size:11px;
+                                     padding:2px 8px; border-radius:20px; margin:2px;
+                                     display:inline-block;">
+                            {{ course.name }}
+                        </span>
+                        <form action="/admin/unenroll/{{ user.id }}/{{ course.id }}"
+                              method="POST" style="display:inline;">
+                            <button type="submit"
+                                style="background:none; border:none; color:#ef4444;
+                                       font-size:11px; cursor:pointer; padding:0 2px;"
+                                title="Remove">✕</button>
                         </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    {% endfor %}
+                {% else %}
+                    <span style="color:#9ca3af; font-style:italic; font-size:12px;">No courses yet</span>
+                {% endif %}
+            </td>
+            <td>
+                <a href="/admin/enroll/{{ user.id }}" class="btn-edit" style="background:#3b82f6;">+ Enroll</a>
+                <a href="/admin/edit/{{ user.id }}" class="btn-edit">✏️ Edit</a>
+                <form action="/admin/delete/{{ user.id }}" method="POST" style="display:inline;"
+                      onsubmit="return confirm('Delete {{ user.username }}?')">
+                    <button type="submit" class="btn-delete">🗑️ Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
     </div>
 </div>
 </body>

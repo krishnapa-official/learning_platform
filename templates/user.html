@@ -23,12 +23,13 @@
 
         label { display: block; font-size: 13px; color: #64748b;
                 font-weight: bold; margin-bottom: 6px; }
-        input {
+        input, select {
             width: 100%; padding: 11px 14px; margin-bottom: 18px;
             border: 1px solid #cbd5e1; border-radius: 6px;
             font-size: 14px; outline: none; transition: border 0.2s;
+            background: white; color: #1e293b;
         }
-        input:focus { border-color: #3b82f6; }
+        input:focus, select:focus { border-color: #3b82f6; }
 
         small { display: block; color: #94a3b8; font-size: 12px;
                 margin-top: -14px; margin-bottom: 18px; }
@@ -68,6 +69,20 @@
         <label>New Password</label>
         <input type="password" name="password" placeholder="Leave blank to keep current">
         <small>Only fill this if you want to change the password.</small>
+
+        <label>Phone Number</label>
+        <input type="tel" name="phone" value="{{ user.phone or '' }}" placeholder="Enter phone number">
+
+        <label>Course</label>
+        <select name="course_id">
+            <option value="">-- Select a Course --</option>
+            {% for course in courses %}
+                <option value="{{ course.id }}"
+                    {% if user.courses and course in user.courses %}selected{% endif %}>
+                    {{ course.name }}
+                </option>
+            {% endfor %}
+        </select>
 
         <div class="actions">
             <button type="submit" class="btn-save">💾 Save Changes</button>

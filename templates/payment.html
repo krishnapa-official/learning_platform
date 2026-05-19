@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EduTutor - Payment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f5f3ef;
+      min-height: 100vh;
+      color: #1a1510;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: #0f1b2d;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #e85d26 0%, #f5a623 100%);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .nav-logo-text {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-logo-text span { color: #f5a623; }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      color: rgba(255,255,255,0.65);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: #fff; }
+
+    .nav-user {
+      background: #e85d26;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: background 0.2s;
+    }
+
+    .nav-user:hover { background: #d14f1f; }
+
+    /* ── LAYOUT ── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 340px;
+      gap: 1.5rem;
+      max-width: 980px;
+      margin: 2rem auto;
+      padding: 0 1.5rem 3rem;
+      align-items: start;
+    }
+
+    .left-col { display: flex; flex-direction: column; gap: 1rem; }
+
+    /* ── CARDS ── */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 1.5rem;
+      border: 0.5px solid rgba(0,0,0,0.08);
+    }
+
+    .step-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #e85d26;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #f0ede8;
+    }
+
+    /* ── FORM ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: #6b6560;
+      letter-spacing: 0.3px;
+    }
+
+    .field input,
+    .field select {
+      padding: 11px 14px;
+      border: 1.5px solid #ede9e3;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1a1510;
+      background: #fdfcfb;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      border-color: #e85d26;
+      box-shadow: 0 0 0 3px rgba(232,93,38,0.08);
+    }
+
+    .field input::placeholder { color: #bfbab4; }
+
+    .field input.filled {
+      border-color: #22c55e;
+      background: #f9fffe;
+    }
+
+    /* ── PAYMENT TABS ── */
+    .payment-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-bottom: 1.25rem;
+    }
+
+    .tab-btn {
+      padding: 10px;
+      border: 1.5px solid #ede9e3;
+      border-radius: 10px;
+      background: #fdfcfb;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b6560;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      border-color: #e85d26;
+      background: #fff7f4;
+      color: #e85d26;
+    }
+
+    .tab-btn:hover:not(.active) {
+      border-color: #d4cfc9;
+      background: #f9f7f5;
+    }
+
+    /* ── TAB SECTIONS ── */
+    .tab-section { display: none; flex-direction: column; gap: 1rem; }
+    .tab-section.active { display: flex; }
+
+    /* ── CARD SECTION ── */
+    .card-badges {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-badge {
+      background: #f5f3ef;
+      border: 0.5px solid #ede9e3;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #6b6560;
+      letter-spacing: 0.5px;
+    }
+
+    .card-number-wrap { position: relative; }
+    .card-number-wrap input { padding-right: 44px; letter-spacing: 2px; }
+    .card-type-icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: #bfbab4;
+    }
+
+    /* ── UPI ── */
+    .upi-input-wrap { display: flex; gap: 8px; }
+    .upi-input-wrap input { flex: 1; }
+
+    .verify-btn {
+      padding: 11px 18px;
+      background: #0f1b2d;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+
+    .verify-btn:hover { background: #1a2d4a; }
+
+    /* ── NET BANKING ── */
+    .bank-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .bank-btn {
+      padding: 12px 8px;
+      border: 1.5px solid #ede9e3;
+      border-radius: 10px;
+      background: #fdfcfb;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      color: #6b6560;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .bank-btn:hover,
+    .bank-btn.selected {
+      border-color: #e85d26;
+      background: #fff7f4;
+      color: #e85d26;
+    }
+
+    /* ── SECURITY NOTE ── */
+    .security-note {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 10px 14px;
+      background: #f0fdf4;
+      border: 0.5px solid #bbf7d0;
+      border-radius: 10px;
+      font-size: 12px;
+      color: #16a34a;
+    }
+
+    /* ── ORDER SUMMARY ── */
+    .summary-card {
+      background: #0f1b2d;
+      border-radius: 16px;
+      overflow: hidden;
+      color: #fff;
+      position: sticky;
+      top: 80px;
+    }
+
+    .course-banner {
+      background: linear-gradient(135deg, #1a2d4a 0%, #0f1b2d 100%);
+      padding: 1.25rem 1.5rem;
+      border-bottom: 0.5px solid rgba(255,255,255,0.08);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .course-icon {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #e85d26 0%, #f5a623 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .course-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+
+    .course-sub {
+      font-size: 12px;
+      color: rgba(255,255,255,0.5);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .summary-body { padding: 1.25rem 1.5rem; }
+
+    .fee-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 9px 0;
+      font-size: 13px;
+      color: rgba(255,255,255,0.6);
+      border-bottom: 0.5px solid rgba(255,255,255,0.06);
+    }
+
+    .fee-row:last-of-type { border-bottom: none; }
+    .fee-row .amount { color: rgba(255,255,255,0.9); font-weight: 500; }
+    .fee-row.free .amount { color: #4ade80; }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .total-label { font-size: 14px; font-weight: 600; color: #fff; }
+
+    .total-amount {
+      font-size: 24px;
+      font-weight: 600;
+      color: #f5a623;
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* ── PAY BUTTON ── */
+    .pay-btn {
+      width: 100%;
+      margin-top: 1.25rem;
+      background: linear-gradient(135deg, #e85d26 0%, #f5a623 100%);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      padding: 15px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.3px;
+      transition: opacity 0.2s, transform 0.15s;
+    }
+
+    .pay-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .pay-btn:active { transform: scale(0.98); }
+
+    .pay-btn.processing {
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .pay-btn.success {
+      background: linear-gradient(135deg, #16a34a 0%, #4ade80 100%);
+      pointer-events: none;
+    }
+
+    /* ── SSL ROW ── */
+    .ssl-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin-top: 12px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .trust-badges {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .trust-badge {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      color: rgba(255,255,255,0.25);
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 0.5px solid rgba(255,255,255,0.12);
+      border-radius: 4px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 720px) {
+      .main-grid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem 3rem;
+      }
+
+      .summary-card { position: static; }
+
+      .nav-links a { display: none; }
+
+      .form-row { grid-template-columns: 1fr; }
+      .form-row .field { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">🦉</div>
+      <div class="nav-logo-text">Edu<span>Tutor</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Courses</a>
+      <a href="#">Contact</a>
+      <button class="nav-user">
+        <i class="ti ti-user"></i> vazeera ▾
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main-grid">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-col">
+
+      <!-- CONTACT DETAILS -->
+      <div class="card">
+        <div class="step-label">Step 1 — Contact Details</div>
+        <div class="form-row">
+          <div class="field full">
+            <label for="email">Email Address</label>
+            <input id="email" type="email" value="vazeeraks@gmail.com" class="filled" />
+          </div>
+          <div class="field full">
+            <label for="address">Billing Address <span style="font-weight:300;color:#bfbab4">(optional)</span></label>
+            <input id="address" type="text" placeholder="Street, City, State" />
+          </div>
+        </div>
+      </div>
+
+      <!-- PAYMENT METHOD -->
+      <div class="card">
+        <div class="step-label">Step 2 — Payment Method</div>
+
+        <div class="payment-tabs">
+          <button class="tab-btn active" onclick="switchTab('card', this)">
+            <i class="ti ti-credit-card"></i> Card
+          </button>
+          <button class="tab-btn" onclick="switchTab('upi', this)">
+            <i class="ti ti-qrcode"></i> UPI
+          </button>
+          <button class="tab-btn" onclick="switchTab('netbanking', this)">
+            <i class="ti ti-building-bank"></i> Net Banking
+          </button>
+        </div>
+
+        <!-- CARD TAB -->
+        <div class="tab-section active" id="tab-card">
+          <div class="card-badges">
+            <span class="card-badge">VISA</span>
+            <span class="card-badge">MC</span>
+            <span class="card-badge">RUPAY</span>
+            <span class="card-badge">AMEX</span>
+          </div>
+          <div class="form-row">
+            <div class="field full">
+              <label for="card-number">Card Number</label>
+              <div class="card-number-wrap">
+                <input id="card-number" type="text" placeholder="1234  5678  9012  3456" maxlength="19" oninput="formatCard(this)" />
+                <span class="card-type-icon">💳</span>
+              </div>
+            </div>
+            <div class="field full">
+              <label for="card-name">Cardholder Name</label>
+              <input id="card-name" type="text" placeholder="Name as on card" />
+            </div>
+            <div class="field">
+              <label for="expiry">Expiry Date</label>
+              <input id="expiry" type="text" placeholder="MM / YY" maxlength="7" oninput="formatExpiry(this)" />
+            </div>
+            <div class="field">
+              <label for="cvv">CVV</label>
+              <input id="cvv" type="password" placeholder="•••" maxlength="4" />
+            </div>
+          </div>
+          <div class="security-note">
+            <i class="ti ti-shield-check"></i>
+            Your card details are encrypted with 256-bit SSL and never stored on our servers.
+          </div>
+        </div>
+
+        <!-- UPI TAB -->
+        <div class="tab-section" id="tab-upi">
+          <div class="field">
+            <label for="upi-id">UPI ID</label>
+            <div class="upi-input-wrap">
+              <input id="upi-id" type="text" placeholder="yourname@upi" />
+              <button class="verify-btn" onclick="verifyUPI()">Verify</button>
+            </div>
+          </div>
+          <div class="security-note">
+            <i class="ti ti-shield-check"></i>
+            You'll receive a payment request on your UPI app to confirm.
+          </div>
+        </div>
+
+        <!-- NET BANKING TAB -->
+        <div class="tab-section" id="tab-netbanking">
+          <label style="font-size:12px;font-weight:500;color:#6b6560;">Select Your Bank</label>
+          <div class="bank-grid">
+            <button class="bank-btn" onclick="selectBank(this)">SBI</button>
+            <button class="bank-btn" onclick="selectBank(this)">HDFC</button>
+            <button class="bank-btn" onclick="selectBank(this)">ICICI</button>
+            <button class="bank-btn" onclick="selectBank(this)">Axis</button>
+            <button class="bank-btn" onclick="selectBank(this)">Kotak</button>
+            <button class="bank-btn" onclick="selectBank(this)">Other</button>
+          </div>
+          <div class="security-note">
+            <i class="ti ti-shield-check"></i>
+            You'll be redirected to your bank's secure portal to complete payment.
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN: ORDER SUMMARY -->
+    <div>
+      <div class="summary-card">
+        <div class="course-banner">
+          <div class="course-icon">⚡</div>
+          <div>
+            <div class="course-name">C++ Programming</div>
+            <div class="course-sub">
+              <i class="ti ti-clock" style="font-size:12px"></i>
+              3-Month Course
+            </div>
+          </div>
+        </div>
+
+        <div class="summary-body">
+          <div class="fee-row">
+            <span>Course Fee</span>
+            <span class="amount">₹8,500</span>
+          </div>
+          <div class="fee-row">
+            <span>GST (18%)</span>
+            <span class="amount">₹1,530</span>
+          </div>
+          <div class="fee-row free">
+            <span>Enrollment Fee</span>
+            <span class="amount">Free</span>
+          </div>
+
+          <div class="total-row">
+            <span class="total-label">Total Payable</span>
+            <span class="total-amount">₹10,030</span>
+          </div>
+
+          <button class="pay-btn" id="pay-btn" onclick="handlePay()">
+            <i class="ti ti-lock"></i>
+            Pay ₹10,030 Securely
+          </button>
+
+          <div class="ssl-row">
+            <i class="ti ti-shield" style="font-size:12px"></i>
+            256-bit SSL · PCI DSS Compliant · Safe & Secure
+          </div>
+          <div class="trust-badges">
+            <span class="trust-badge">SSL</span>
+            <span class="trust-badge">PCI DSS</span>
+            <span class="trust-badge">Verified</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-grid -->
+
+  <script>
+    function switchTab(tab, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    function formatCard(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 16);
+      input.value = v.match(/.{1,4}/g)?.join('  ') || v;
+    }
+
+    function formatExpiry(input) {
+      let v = input.value.replace(/\D/g, '').substring(0, 4);
+      if (v.length >= 3) v = v.substring(0, 2) + ' / ' + v.substring(2);
+      input.value = v;
+    }
+
+    function selectBank(btn) {
+      document.querySelectorAll('.bank-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+    }
+
+    function verifyUPI() {
+      const input = document.getElementById('upi-id');
+      const val = input.value.trim();
+      if (!val.includes('@')) {
+        input.style.borderColor = '#ef4444';
+        input.focus();
+        return;
+      }
+      input.style.borderColor = '#22c55e';
+    }
+
+    function handlePay() {
+      const btn = document.getElementById('pay-btn');
+      btn.classList.add('processing');
+      btn.innerHTML = '<i class="ti ti-loader-2 ti-spin"></i> Processing…';
+      setTimeout(() => {
+        btn.classList.remove('processing');
+        btn.classList.add('success');
+        btn.innerHTML = '<i class="ti ti-circle-check"></i> Payment Successful!';
+      }, 2200);
+    }
+  </script>
+
+</body>
+</html>

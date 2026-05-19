@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Enroll User - EduTutor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f1f5f9;
+               display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .card { background: white; padding: 40px; border-radius: 12px;
+                width: 420px; box-shadow: 0 4px 16px rgba(0,0,0,0.12); }
+        h2 { color: #1e293b; margin-bottom: 8px; font-size: 22px; }
+        p  { color: #64748b; font-size: 14px; margin-bottom: 24px; }
+        label { display: block; font-size: 13px; color: #64748b;
+                font-weight: bold; margin-bottom: 6px; }
+        select { width: 100%; padding: 11px 14px; margin-bottom: 18px;
+                 border: 1px solid #cbd5e1; border-radius: 6px;
+                 font-size: 14px; outline: none; }
+        select:focus { border-color: #3b82f6; }
+        .actions { display: flex; gap: 10px; margin-top: 8px; }
+        .btn-save { flex: 1; background: #3b82f6; color: white; padding: 12px;
+                    border: none; border-radius: 6px; cursor: pointer;
+                    font-size: 14px; font-weight: bold; }
+        .btn-save:hover { background: #2563eb; }
+        .btn-cancel { flex: 1; background: #e2e8f0; color: #475569; padding: 12px;
+                      border: none; border-radius: 6px; cursor: pointer;
+                      font-size: 14px; font-weight: bold; text-decoration: none;
+                      text-align: center; display: inline-block; }
+        .btn-cancel:hover { background: #cbd5e1; }
+        .already { margin-bottom: 20px; }
+        .badge { background: #dbeafe; color: #1e40af; font-size: 12px;
+                 padding: 3px 10px; border-radius: 20px; display: inline-block; margin: 2px; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h2>📚 Enroll User</h2>
+    <p>Enrolling: <strong>{{ user.username }}</strong></p>
+
+    {% if user.courses %}
+    <div class="already">
+        <label>Already Enrolled In</label>
+        {% for course in user.courses %}
+            <span class="badge">{{ course.name }}</span>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form action="/admin/enroll/{{ user.id }}" method="POST">
+        <label>Select Course</label>
+        <select name="course_id" required>
+            <option value="">-- Choose a course --</option>
+            {% for course in courses %}
+                {% if course not in user.courses %}
+                    <option value="{{ course.id }}">{{ course.name }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <div class="actions">
+            <button type="submit" class="btn-save">✅ Enroll</button>
+            <a href="/admin/users" class="btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

@@ -1,18 +1,265 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Data Science Course - EduTutor</title>
+    <title>Data Science - EduTutor</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        .c-hero-banner {
+            background: linear-gradient(135deg, #1f3c5c 0%, #2d5b89 60%, #1b3f63 100%);
+            padding: 70px 40px 60px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        .c-hero-banner::before {
+            content: 'DS';
+            position: absolute;
+            right: 3%;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 220px;
+            font-weight: 900;
+            color: rgba(255,255,255,0.05);
+            line-height: 1;
+            pointer-events: none;
+        }
+        .c-hero-banner .badge {
+            display: inline-block;
+            background: rgba(243,156,18,0.2);
+            border: 1px solid #f39c12;
+            color: #f39c12;
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            margin-bottom: 18px;
+        }
+        .c-hero-banner h1 {
+            font-size: 52px;
+            font-weight: 900;
+            margin: 0 0 16px;
+            line-height: 1.1;
+        }
+        .c-hero-banner h1 span { color: #f39c12; }
+        .c-hero-banner p {
+            font-size: 17px;
+            max-width: 600px;
+            margin: 0 auto 30px;
+            color: #c8d8e8;
+            line-height: 1.7;
+        }
+        .hero-stats-row {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 30px;
+        }
+        .hero-stat .num {
+            font-size: 32px;
+            font-weight: 900;
+            color: #f39c12;
+            display: block;
+        }
+        .hero-stat .lbl {
+            font-size: 12px;
+            color: #a8c4dc;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+        .course-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            background: white;
+            padding: 40px;
+            width: 90%;
+            margin: 40px auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            gap: 30px;
+        }
+        .course-text h2 {
+            font-size: 26px;
+            color: #1f3c5c;
+            margin-bottom: 16px;
+            border-left: 4px solid #f39c12;
+            padding-left: 14px;
+        }
+        .course-text p {
+            font-size: 16px;
+            color: #444;
+            line-height: 1.75;
+            margin-bottom: 14px;
+            text-align: left;
+        }
+        .course-text ul {
+            margin: 0 0 14px 20px;
+            color: #444;
+            font-size: 16px;
+            line-height: 2;
+        }
+        .course-box {
+            flex: 0 0 290px;
+            background: #1f3c5c;
+            color: white;
+            padding: 28px 22px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(31,60,92,0.3);
+            margin-left: 0;
+        }
+        .course-box h3 {
+            font-size: 18px;
+            color: #f39c12;
+            margin-bottom: 18px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 12px;
+        }
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            font-size: 14px;
+        }
+        .detail-item:last-of-type { border-bottom: none; }
+        .detail-item .d-label { color: #a8c4dc; }
+        .detail-item .d-value { font-weight: 600; color: white; }
+        .price-section {
+            text-align: center;
+            margin: 18px 0 14px;
+            background: rgba(243,156,18,0.12);
+            border-radius: 8px;
+            padding: 14px;
+        }
+        .price-section .price { font-size: 34px; font-weight: 900; color: #f39c12; }
+        .price-section .price-note { font-size: 11px; color: #a8c4dc; margin-top: 4px; }
+        .enroll-btn {
+            width: 100%;
+            margin-top: 4px;
+            padding: 12px;
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .enroll-btn:hover { background-color: #e67e22; }
+        .card-note { text-align: center; font-size: 12px; color: #a8c4dc; margin-top: 10px; }
+
+        .learn-section { background: #f4f8fc; padding: 60px 20px; text-align: center; }
+        .learn-section .section-title { color: #1f3c5c; margin-bottom: 8px; }
+        .learn-section .section-sub { color: #666; margin-bottom: 32px; font-size: 15px; }
+        .learn-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        .learn-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px 20px;
+            text-align: left;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+            border-top: 3px solid #2d5b89;
+            transition: 0.3s;
+        }
+        .learn-card:hover { transform: translateY(-6px); box-shadow: 0 8px 20px rgba(0,0,0,0.12); border-top-color: #f39c12; }
+        .learn-card .lc-icon { font-size: 28px; margin-bottom: 12px; }
+        .learn-card h4 { color: #1f3c5c; font-size: 16px; margin: 0 0 8px; }
+        .learn-card p { color: #666; font-size: 13px; line-height: 1.6; margin: 0; }
+
+        .syllabus-section { padding: 60px 20px; text-align: center; background: white; }
+        .syllabus-section .section-title { color: #1f3c5c; margin-bottom: 8px; }
+        .syllabus-section .section-sub { color: #666; margin-bottom: 28px; font-size: 15px; }
+        .syllabus-list { max-width: 750px; margin: 0 auto; text-align: left; }
+        .syl-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 14px 18px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+        .syl-item:hover { background: #f4f8fc; border-radius: 8px; }
+        .syl-num {
+            width: 34px; height: 34px;
+            background: #1f3c5c; color: white;
+            border-radius: 8px;
+            display: grid; place-items: center;
+            font-weight: bold; font-size: 13px; flex-shrink: 0;
+        }
+        .syl-name { flex: 1; font-size: 15px; color: #333; font-weight: 500; }
+        .syl-week {
+            font-size: 12px; color: #f39c12; font-weight: 600;
+            background: rgba(243,156,18,0.1);
+            padding: 3px 10px; border-radius: 12px;
+        }
+
+        .instructor-section { background: #f4f8fc; padding: 60px 20px; text-align: center; }
+        .instructor-section .section-title { color: #1f3c5c; margin-bottom: 28px; }
+        .instructor-card {
+            display: flex; align-items: center; gap: 28px;
+            background: white; border-radius: 12px;
+            padding: 32px 36px; max-width: 700px;
+            margin: 0 auto;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08); text-align: left;
+        }
+        .inst-avatar {
+            width: 80px; height: 80px;
+            background: linear-gradient(135deg, #1f3c5c, #2d5b89);
+            border-radius: 50%;
+            display: grid; place-items: center;
+            font-size: 28px; font-weight: 900; color: white; flex-shrink: 0;
+        }
+        .inst-name { font-size: 22px; font-weight: 800; color: #1f3c5c; }
+        .inst-role { color: #f39c12; font-size: 13px; font-weight: 600; margin: 4px 0 10px; }
+        .inst-bio { color: #555; font-size: 14px; line-height: 1.7; }
+
+        @media (max-width: 768px) {
+            .course-container { flex-direction: column; }
+            .course-box { flex: unset; width: 100%; }
+            .learn-grid { grid-template-columns: 1fr 1fr; }
+            .c-hero-banner h1 { font-size: 34px; }
+            .c-hero-banner::before { display: none; }
+            .hero-stats-row { gap: 20px; }
+            .instructor-card { flex-direction: column; text-align: center; }
+        }
+        @media (max-width: 500px) { .learn-grid { grid-template-columns: 1fr; } }
+    </style>
 </head>
 <body>
 
 {% include 'navbar.html' %}
 
+<!-- HERO -->
+<div class="c-hero-banner">
+    <div class="badge">📊 Most In-Demand Course</div>
+    <h1>Data <span>Science</span></h1>
+    <p>Combine statistics, machine learning and visualization to extract powerful insights from raw data and drive smarter business decisions.</p>
+    <div class="hero-stats-row">
+        <div class="hero-stat"><span class="num">6</span><span class="lbl">Months</span></div>
+        <div class="hero-stat"><span class="num">48</span><span class="lbl">Classes</span></div>
+        <div class="hero-stat"><span class="num">10+</span><span class="lbl">Tools</span></div>
+        <div class="hero-stat"><span class="num">100%</span><span class="lbl">Practical</span></div>
+    </div>
+</div>
+
+<!-- ABOUT + DETAILS -->
 <section class="course-page">
     <div class="course-container">
         <div class="course-text">
-            <h1>Data Science</h1>
-            <p>Data Science combines statistics, machine learning and data visualization to extract meaningful insights from raw data. It helps businesses optimize operations and predict future trends.</p>
+            <h2>About This Course</h2>
+            <p>Data Science combines statistics, machine learning and data visualization to extract meaningful insights from raw data. It helps businesses optimize operations, understand customers, and predict future trends.</p>
             <p>It answers important business questions like:</p>
             <ul>
                 <li>What do customers want?</li>
@@ -20,16 +267,72 @@
                 <li>What will be the upcoming sales trend?</li>
                 <li>How much stock is needed for festivals?</li>
             </ul>
-            <p>You will learn Python, statistics, data wrangling, machine learning models, and data visualization tools like Matplotlib and Seaborn.</p>
+            <p>You will learn Python, statistics, data wrangling, machine learning models, and data visualization tools like Matplotlib and Seaborn — everything you need to become a job-ready data scientist.</p>
         </div>
+
         <div class="course-box">
-            <h3>Course Details</h3>
-            <p><strong>Duration:</strong> 6 Months</p>
-            <p><strong>Fees:</strong> ₹17,500</p>
-            <p><strong>Instructor:</strong> Dr. Sreejith</p>
-            <p><strong>Mode:</strong> Online</p>
-            <p><strong>Schedule:</strong> Sat/Sun</p>
-            <button class="enroll-btn">Enroll Now</button>
+            <h3>📋 Course Details</h3>
+            <div class="detail-item"><span class="d-label">⏱ Duration</span><span class="d-value">6 Months</span></div>
+            <div class="detail-item"><span class="d-label">📅 Schedule</span><span class="d-value">Sat / Sun</span></div>
+            <div class="detail-item"><span class="d-label">👨‍🏫 Instructor</span><span class="d-value">Dr. Sreejith</span></div>
+            <div class="detail-item"><span class="d-label">🖥️ Mode</span><span class="d-value">Online</span></div>
+            <div class="detail-item"><span class="d-label">🎯 Level</span><span class="d-value">Beginner → Advanced</span></div>
+            <div class="price-section">
+                <div class="price">₹17,500</div>
+                <div class="price-note">Reg. ₹1000 + Material ₹500 included</div>
+            </div>
+            <button class="enroll-btn" onclick="window.location.href='/enroll/Data Science'">Enroll Now →</button>
+            <p class="card-note">✅ Seat confirmed within 24 hours</p>
+        </div>
+    </div>
+</section>
+
+<!-- WHAT YOU'LL LEARN -->
+<section class="learn-section">
+    <div class="section-title">What You'll Learn</div>
+    <p class="section-sub">Hands-on topics covered throughout the course</p>
+    <div class="learn-grid">
+        <div class="learn-card"><div class="lc-icon">🐍</div><h4>Python for Data Science</h4><p>Master Python libraries like NumPy, Pandas, and Matplotlib used in real data workflows.</p></div>
+        <div class="learn-card"><div class="lc-icon">📊</div><h4>Statistics & Probability</h4><p>Understand distributions, hypothesis testing, and statistical inference — the backbone of data science.</p></div>
+        <div class="learn-card"><div class="lc-icon">🧹</div><h4>Data Wrangling</h4><p>Clean, transform, and prepare messy real-world datasets for analysis using Pandas.</p></div>
+        <div class="learn-card"><div class="lc-icon">🤖</div><h4>Machine Learning</h4><p>Build regression, classification and clustering models using Scikit-learn.</p></div>
+        <div class="learn-card"><div class="lc-icon">📈</div><h4>Data Visualization</h4><p>Create compelling charts and dashboards using Matplotlib, Seaborn and Plotly.</p></div>
+        <div class="learn-card"><div class="lc-icon">💼</div><h4>Real Projects</h4><p>Work on sales prediction, customer segmentation and sentiment analysis projects.</p></div>
+    </div>
+</section>
+
+<!-- SYLLABUS -->
+<section class="syllabus-section">
+    <div class="section-title">Course Syllabus</div>
+    <p class="section-sub">24 weeks · 2 classes per week · Sat / Sun</p>
+    <div class="syllabus-list">
+        <div class="syl-item"><div class="syl-num">01</div><div class="syl-name">Introduction to Data Science & Python Setup</div><div class="syl-week">Week 1</div></div>
+        <div class="syl-item"><div class="syl-num">02</div><div class="syl-name">Python Basics — Variables, Loops, Functions</div><div class="syl-week">Week 2</div></div>
+        <div class="syl-item"><div class="syl-num">03</div><div class="syl-name">NumPy — Arrays & Numerical Computing</div><div class="syl-week">Week 3</div></div>
+        <div class="syl-item"><div class="syl-num">04</div><div class="syl-name">Pandas — DataFrames & Data Manipulation</div><div class="syl-week">Week 4</div></div>
+        <div class="syl-item"><div class="syl-num">05</div><div class="syl-name">Data Cleaning & Handling Missing Values</div><div class="syl-week">Week 5</div></div>
+        <div class="syl-item"><div class="syl-num">06</div><div class="syl-name">Exploratory Data Analysis (EDA)</div><div class="syl-week">Week 6</div></div>
+        <div class="syl-item"><div class="syl-num">07</div><div class="syl-name">Statistics — Mean, Median, Distributions</div><div class="syl-week">Week 7</div></div>
+        <div class="syl-item"><div class="syl-num">08</div><div class="syl-name">Probability & Hypothesis Testing</div><div class="syl-week">Week 8</div></div>
+        <div class="syl-item"><div class="syl-num">09</div><div class="syl-name">Data Visualization — Matplotlib & Seaborn</div><div class="syl-week">Week 9-10</div></div>
+        <div class="syl-item"><div class="syl-num">10</div><div class="syl-name">Machine Learning Introduction & Scikit-learn</div><div class="syl-week">Week 11</div></div>
+        <div class="syl-item"><div class="syl-num">11</div><div class="syl-name">Regression Models — Linear & Logistic</div><div class="syl-week">Week 12-13</div></div>
+        <div class="syl-item"><div class="syl-num">12</div><div class="syl-name">Classification — Decision Trees, Random Forest</div><div class="syl-week">Week 14-15</div></div>
+        <div class="syl-item"><div class="syl-num">13</div><div class="syl-name">Clustering — K-Means & Hierarchical</div><div class="syl-week">Week 16</div></div>
+        <div class="syl-item"><div class="syl-num">14</div><div class="syl-name">Model Evaluation & Tuning</div><div class="syl-week">Week 17-18</div></div>
+        <div class="syl-item"><div class="syl-num">15</div><div class="syl-name">Final Projects & Certification</div><div class="syl-week">Week 19-24</div></div>
+    </div>
+</section>
+
+<!-- INSTRUCTOR -->
+<section class="instructor-section">
+    <div class="section-title">Meet Your Instructor</div>
+    <div class="instructor-card">
+        <div class="inst-avatar">S</div>
+        <div>
+            <div class="inst-name">Dr. Sreejith</div>
+            <div class="inst-role">Data Science & ML Specialist · PhD in Computer Science</div>
+            <div class="inst-bio">Dr. Sreejith brings academic depth and industry experience to every class. With a PhD in Computer Science and years of hands-on ML project work, he simplifies complex algorithms into clear, practical lessons. His students have gone on to work at top analytics firms and tech companies across India.</div>
         </div>
     </div>
 </section>

@@ -13,10 +13,21 @@ ADMIN_PASSWORD = "admin123"
 
 db = SQLAlchemy(app)
 
+# ── Many-to-many table ─────────────────────────────────────
+enrollments = db.Table('enrollments',
+    db.Column('user_id',   db.Integer, db.ForeignKey('user.id'),   primary_key=True),
+    db.Column('course_id', db.Integer, db.ForeignKey('course.id'), primary_key=True)
+)
+
+# ── Models ─────────────────────────────────────────────────
 class User(db.Model):
-    id       = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80),  unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
+    id           = db.Column(db.Integer, primary_key=True)
+    username     = db.Column(db.String(80),  unique=True, nullable=False)
+    password     = db.Column(db.String(200), nullable=False)
+    student_name = db.Column(db.String(100), nullable=True)
+    email        = db.Column(db.String(120), nullable=True)
+    phone        = db.Column(db.String(20),  nullable=True)
+    courses      = db.relationship('Course', secondary=enrollments, backref='users')
 
 class Course(db.Model):
     id               = db.Column(db.Integer, primary_key=True)
@@ -30,6 +41,7 @@ class Course(db.Model):
     material_fee     = db.Column(db.Integer, default=0)
     discount         = db.Column(db.Integer, default=0)
 
+# ── Create DB + Seed ───────────────────────────────────────
 with app.app_context():
     db.create_all()
     if Course.query.count() == 0:
@@ -44,6 +56,21 @@ with app.app_context():
         db.session.add_all(seed)
         db.session.commit()
 
+# ── Context Processor ──────────────────────────────────────
+@app.context_processor
+def inject_user():
+    current_user = None
+    enrolled_course_names = []
+    if 'user' in session:
+        current_user = User.query.filter_by(username=session['user']).first()
+        if current_user:
+            enrolled_course_names = [c.name for c in current_user.courses]
+    return dict(
+        current_user=current_user,
+        enrolled_course_names=enrolled_course_names
+    )
+
+# ── Login Required Decorator ───────────────────────────────
 def login_required(f):
     @wraps(f)
     def decorated(*args, **kwargs):
@@ -52,13 +79,44 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# ── Home ──────────────────────────────────────────────────
+# ── Home ───────────────────────────────────────────────────
 @app.route('/')
 @app.route('/index')
 def home():
     return render_template('index.html')
 
-# ── Course Pages ──────────────────────────────────────────
+# ── About Pages ────────────────────────────────────────────
+@app.route('/about')
+def about():
+    return redirect(url_for('ourstory'))
+
+@app.route('/about/ourstory')
+def ourstory():
+    return render_template('ourstory.html')
+
+@app.route('/about/mission')
+def mission():
+    return render_template('ourmission.html')
+
+@app.route('/about/promise')
+def promise():
+    return render_template('ourpromise.html')
+
+@app.route('/about/whatwedo')
+def whatwedo():
+    return render_template('whatwedo.html')
+
+# ── Contact ────────────────────────────────────────────────
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+# ── Courses ────────────────────────────────────────────────
+@app.route('/courses')
+def courses():
+    return redirect(url_for('course_c'))
+
+# ── Course Pages ───────────────────────────────────────────
 @app.route('/courses/c')
 def course_c():
     return render_template('c.html')
@@ -77,133 +135,169 @@ def course_python():
 
 @app.route('/courses/sql')
 def course_sql():
-    return render_template('sql.html')
+    return render_template('SQL.html')
 
 @app.route('/courses/datascience')
 def course_datascience():
     return render_template('datascience.html')
 
-# ── About Pages ───────────────────────────────────────────
-@app.route('/about/ourstory')
-def ourstory():
-    return render_template('ourstory.html')
-
-@app.route('/about/mission')
-def mission():
-    return render_template('mission.html')
-
-@app.route('/about/promise')
-def promise():
-    return render_template('promise.html')
-
-@app.route('/about/whatwedo')
-def whatwedo():
-    return render_template('whatwedo.html')
-
-# ── Register ──────────────────────────────────────────────
+# ── Register ───────────────────────────────────────────────
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if not username or not password:
+        username     = request.form.get('username', '').strip()
+        password     = request.form.get('password', '').strip()
+        student_name = request.form.get('student_name', '').strip()
+        email        = request.form.get('email', '').strip()
+        phone        = request.form.get('phone', '').strip()
+        subject      = request.form.get('subject', '').strip()
+
+        if not username or not password or not subject:
             return render_template('register.html', error='All fields are required')
         if len(password) < 8:
             return render_template('register.html', error='Password must be at least 8 characters')
         if User.query.filter_by(username=username).first():
             return render_template('register.html', error='Username already exists')
-        db.session.add(User(username=username, password=generate_password_hash(password)))
+
+        new_user = User(
+            username=username,
+            password=generate_password_hash(password),
+            student_name=student_name,
+            email=email,
+            phone=phone
+        )
+        db.session.add(new_user)
         db.session.commit()
+
+        course = Course.query.filter_by(name=subject).first()
+        if course:
+            new_user.courses.append(course)
+            db.session.commit()
+
         return redirect(url_for('login'))
     return render_template('register.html')
 
-# ── Login ─────────────────────────────────────────────────
+# ── Login ──────────────────────────────────────────────────
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
         user = User.query.filter_by(username=username).first()
+
         if user and check_password_hash(user.password, password):
             session['user'] = username
             return redirect(url_for('home'))
+
         return render_template('login.html', error='Invalid username or password')
     return render_template('login.html')
 
-# ── User Logout ───────────────────────────────────────────
+# ── Logout (handles both user and admin logout) ────────────
 @app.route('/logout')
 def logout():
-    session.pop('user', None)
-    return redirect(url_for('login'))
+    session.clear()
+    flash("Logged out successfully", "info")
+    return redirect(url_for('home'))
 
-# ── Admin Login ───────────────────────────────────────────
+# ── Admin Logout (separate route for admin nav links) ──────
+@app.route('/admin/logout')
+def admin_logout():
+    session.clear()
+    flash("Admin logged out successfully", "info")
+    return redirect(url_for('admin_login'))
+
+# ── Enroll in Course (by name) ─────────────────────────────
+@app.route('/enroll/<course_name>')
+@login_required
+def enroll_course(course_name):
+    user = User.query.filter_by(username=session['user']).first()
+    course = Course.query.filter_by(name=course_name).first()
+    if user and course:
+        if course not in user.courses:
+            user.courses.append(course)
+            db.session.commit()
+            flash(f"Successfully enrolled in '{course.name}'!", "success")
+        else:
+            flash(f"You are already enrolled in '{course.name}'.", "info")
+    return redirect(url_for('home'))
+
+# ── Profile ────────────────────────────────────────────────
+@app.route('/profile')
+@login_required
+def profile():
+    user = User.query.filter_by(username=session['user']).first()
+    return render_template('profile.html', user=user)
+
+# ── Admin Login ────────────────────────────────────────────
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if session.get('is_admin'):
-        return redirect('/admin')
+        return redirect(url_for('admin_panel'))
     if request.method == 'POST':
         if (request.form['username'] == ADMIN_USERNAME and
                 request.form['password'] == ADMIN_PASSWORD):
             session['is_admin'] = True
-            return redirect('/admin')
+            return redirect(url_for('admin_panel'))
         return render_template('adminlogin.html', error='Wrong username or password')
     return render_template('adminlogin.html')
 
-# ── Admin Panel ───────────────────────────────────────────
+# ── Admin Panel ────────────────────────────────────────────
 @app.route('/admin')
 def admin_panel():
     if not session.get('is_admin'):
-        return redirect('/admin/login')
+        return redirect(url_for('admin_login'))
     users = User.query.all()
     return render_template('admin.html', users=users)
 
-# ── Admin Delete ──────────────────────────────────────────
+# ── Admin Delete User ──────────────────────────────────────
 @app.route('/admin/delete/<int:user_id>', methods=['POST'])
 def admin_delete(user_id):
     if not session.get('is_admin'):
-        return redirect('/admin/login')
+        return redirect(url_for('admin_login'))
     user = User.query.get(user_id)
     if user:
         db.session.delete(user)
         db.session.commit()
         flash("User deleted successfully.", "success")
-    return redirect('/admin')
+    return redirect(url_for('admin_panel'))
 
-# ── Admin Edit ────────────────────────────────────────────
+# ── Admin Edit User ────────────────────────────────────────
 @app.route('/admin/edit/<int:user_id>', methods=['GET', 'POST'])
 def admin_edit(user_id):
     if not session.get('is_admin'):
-        return redirect('/admin/login')
-    user = User.query.get_or_404(user_id)
+        return redirect(url_for('admin_login'))
+    user    = User.query.get_or_404(user_id)
+    courses = Course.query.all()
     if request.method == 'POST':
         new_username = request.form['username'].strip()
         new_password = request.form.get('password', '').strip()
         existing = User.query.filter_by(username=new_username).first()
         if existing and existing.id != user.id:
-            return render_template('user.html', user=user, error='Username already taken.')
+            return render_template('user.html', user=user, courses=courses,
+                                   error='Username already taken.')
         user.username = new_username
+        user.phone    = request.form.get('phone', '').strip()
         if new_password:
             user.password = generate_password_hash(new_password)
+        course_id = request.form.get('course_id')
+        user.courses.clear()
+        if course_id:
+            course = Course.query.get(int(course_id))
+            if course:
+                user.courses.append(course)
         db.session.commit()
         flash(f"User '{user.username}' updated successfully.", "success")
-        return redirect('/admin')
-    return render_template('user.html', user=user)
+        return redirect(url_for('admin_panel'))
+    return render_template('user.html', user=user, courses=courses)
 
-# ── Admin Logout ──────────────────────────────────────────
-@app.route('/admin/logout')
-def admin_logout():
-    session.pop('is_admin', None)
-    return redirect(url_for('home'))
-
-# ── Admin Add User ────────────────────────────────────────
+# ── Admin Add User ─────────────────────────────────────────
 @app.route('/admin/adduser', methods=['GET', 'POST'])
 def admin_add_user():
     if not session.get('is_admin'):
-        return redirect('/admin/login')
+        return redirect(url_for('admin_login'))
     if request.method == 'POST':
-        username  = request.form['username'].strip()
-        password  = request.form['password'].strip()
-        course_id = request.form.get('course_id', '').strip()
+        username = request.form['username'].strip()
+        password = request.form['password'].strip()
         if not username or not password:
             return render_template('adduser.html', error='Both fields are required.', courses=Course.query.all())
         if len(password) < 8:
@@ -214,43 +308,44 @@ def admin_add_user():
         db.session.add(new_user)
         db.session.commit()
         flash(f"User '{username}' created successfully.", "success")
-        return redirect('/admin')
+        return redirect(url_for('admin_panel'))
     return render_template('adduser.html', courses=Course.query.all())
 
-# ── Admin Users Page ──────────────────────────────────────
+# ── Admin Users Page ───────────────────────────────────────
 @app.route('/admin/users')
 def admin_users():
     if not session.get('is_admin'):
-        return redirect('/admin/login')
-    users = User.query.all()
+        return redirect(url_for('admin_login'))
+    users = User.query.options(db.joinedload(User.courses)).all()
     return render_template('admin_users.html', users=users)
 
-# ── Admin Courses Page ────────────────────────────────────
+# ── Admin Courses Page ─────────────────────────────────────
 @app.route('/admin/courses')
 def admin_courses():
     if not session.get('is_admin'):
-        return redirect('/admin/login')
+        return redirect(url_for('admin_login'))
     courses = Course.query.all()
     return render_template('admin_courses.html', courses=courses)
 
-# ── Admin Settings Page ───────────────────────────────────
+# ── Admin Settings ─────────────────────────────────────────
 @app.route('/admin/settings')
 def admin_settings():
     if not session.get('is_admin'):
-        return redirect('/admin/login')
+        return redirect(url_for('admin_login'))
     return render_template('admin_settings.html')
 
-# ── Admin Dashboard ───────────────────────────────────────
+# ── Admin Dashboard ────────────────────────────────────────
 @app.route('/admin/dashboard')
 def admin_dashboard():
     if not session.get('is_admin'):
-        return redirect('/admin/login')
-    return redirect('/admin')
-    # ── Admin Edit Course ─────────────────────────────────────
+        return redirect(url_for('admin_login'))
+    return redirect(url_for('admin_panel'))
+
+# ── Admin Edit Course ──────────────────────────────────────
 @app.route('/admin/courses/edit/<int:course_id>', methods=['GET', 'POST'])
 def admin_edit_course(course_id):
     if not session.get('is_admin'):
-        return redirect('/admin/login')
+        return redirect(url_for('admin_login'))
     course = Course.query.get_or_404(course_id)
     if request.method == 'POST':
         course.name             = request.form['name'].strip()
@@ -264,9 +359,58 @@ def admin_edit_course(course_id):
         course.discount         = int(request.form.get('discount', 0) or 0)
         db.session.commit()
         flash(f"Course '{course.name}' updated successfully.", "success")
-        return redirect('/admin/courses')
+        return redirect(url_for('admin_courses'))
     return render_template('admin_edit_course.html', course=course)
 
-# ── ALWAYS LAST ───────────────────────────────────────────
+# ── Admin Enroll User ──────────────────────────────────────
+@app.route('/admin/enroll/<int:user_id>', methods=['GET', 'POST'])
+def admin_enroll(user_id):
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+    user    = User.query.get_or_404(user_id)
+    courses = Course.query.all()
+    if request.method == 'POST':
+        course_id = request.form.get('course_id')
+        course = Course.query.get(course_id)
+        if course and course not in user.courses:
+            user.courses.append(course)
+            db.session.commit()
+            flash(f"'{user.username}' enrolled in '{course.name}'.", "success")
+        return redirect(url_for('admin_users'))
+    return render_template('admin_enroll.html', user=user, courses=courses)
+
+# ── Admin Unenroll User ────────────────────────────────────
+@app.route('/admin/unenroll/<int:user_id>/<int:course_id>', methods=['POST'])
+def admin_unenroll(user_id, course_id):
+    if not session.get('is_admin'):
+        return redirect(url_for('admin_login'))
+    user   = User.query.get_or_404(user_id)
+    course = Course.query.get_or_404(course_id)
+    if course in user.courses:
+        user.courses.remove(course)
+        db.session.commit()
+        flash(f"'{user.username}' unenrolled from '{course.name}'.", "success")
+    return redirect(url_for('admin_users'))
+
+# NEW
+@app.route('/payment')
+@login_required
+def payment():
+    course = request.args.get('course', '')
+    return render_template('payment.html', preselected_course=course)
+
+# ── Complete Enrollment ────────────────────────────────────
+@app.route('/complete_enrollment', methods=['POST'])
+@login_required
+def complete_enrollment():
+    course_name = request.form.get('course_name')
+    user = User.query.filter_by(username=session['user']).first()
+    course = Course.query.filter_by(name=course_name).first()
+    if user and course:
+        if course not in user.courses:
+            user.courses.append(course)
+            db.session.commit()
+    return redirect(url_for('home'))
+# ── ALWAYS LAST ────────────────────────────────────────────
 if __name__ == '__main__':
     app.run(debug=True)
